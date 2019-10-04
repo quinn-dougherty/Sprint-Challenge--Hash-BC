@@ -21,7 +21,7 @@ def valid_proof(last_hash, proof):
     guess = f"{last_hash}{proof}".encode()
     guess_hash = hashlib.sha256(guess).hexdigest()
 
-
+    #p = hash(proof)
 
     return str(last_hash)[-6:] == guess_hash[:6]
 
@@ -39,19 +39,24 @@ def proof_of_work(last_proof):
 
     start = timer()
 
-
+    #print(last_proof, type(last_proof))
+    last_proof_str = f"{last_proof}".encode()
+    last_hash = hashlib.sha256(last_proof_str).hexdigest()
 
     print("Searching for next proof")
     #block_string = json.dumps(block, sort_keys=True).encode()
 
     proof = 0
-    #guess = f"{last_hash}{proof}".encode()
-    #guess_hash = hashlib.sha256(guess).hexdigest()
+    guess = f"{last_proof}{proof}".encode()
+    guess_hash = hashlib.sha256(guess).hexdigest()
 
-    while not valid_proof(last_proof, proof):
+    # last_proof_encode = f"last_proof".encode()
+    #
+
+    while not valid_proof(last_hash, proof):
         proof += 1
-        #guess = f"{last_hash}{proof}".encode()
-        #guess_hash = hashlib.sha256(guess).hexdigest()
+        guess = f"{last_hash}{proof}".encode()
+        guess_hash = hashlib.sha256(guess).hexdigest()
 
     #  TODO: Your code here
 
@@ -91,6 +96,9 @@ if __name__ == '__main__':
         data = r.json()
         if data.get('message') == 'New Block Forged':
             coins_mined += 1
+            with open("my_money.txt", "w") as wallet:
+                wallet.write(coins_mined)
             print("Total coins mined: " + str(coins_mined))
         else:
             print(data.get('message'))
+# https://lambda-coin-test-1.herokuapp.com/api
