@@ -28,6 +28,20 @@ def get_indices_of_item_weights(weights, length, limit):
 
     return None
 
+def get_indices_of_item_weights_(weights, length, limit):
+    ht = HashTable(16)
+
+    prev_weight = -1
+    hash_table_insert(ht, weights[0], (0, limit - weights[0]))
+    for i in range(1, length):
+        curr_weight = weights[i]
+        curr_needed = limit - curr_weight
+        hash_table_insert(ht, curr_weight, (i, curr_needed))
+        if prev_weight == curr_needed:
+            pass
+
+        prev_weight = curr_weight
+    pass
 
 def print_answer(answer):
     if answer is not None:
