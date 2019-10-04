@@ -6,7 +6,7 @@ from hashtables import (HashTable,
                         hash_table_resize)
 
 
-def get_indices_of_item_weights(weights, length, limit):
+def get_indices_of_item_weights_(weights, length, limit):
     ht = HashTable(16)
 
     for i in range(length):
@@ -25,26 +25,27 @@ def get_indices_of_item_weights(weights, length, limit):
 
     return None
 
-def get_indices_of_item_weights_(weights, length, limit):
+def get_indices_of_item_weights(weights, length, limit):
     ht = HashTable(16)
 
-    hash_table_insert(ht, weights[0], 0)
-    prev_weight = weights[0]
-    for i in range(1, length):
-        curr_weight = weights[i]
-        curr_needed = limit - curr_weight
-        hash_table_insert(ht, curr_weight, i)
-        if prev_weight == curr_needed:
-            idx= hash_table_retrieve(ht, prev_weight)
-            if i > idx:
-                return (i, idx)
-            else:
-                return (idx, i)
-        else:
-            prev_weight = curr_weight
+    for i in range(length):
+        weight = weights[i]
+        hash_table_insert(ht, weight, i)
 
-        prev_weight = curr_weight
-    pass
+    for i in range(length):
+        weight = weights[i]
+        idx = hash_table_retrieve(ht, weight)
+        needed_weight = limit - weight
+        idx2 = hash_table_retrieve(ht, needed_weight)
+
+        if idx2:
+
+            if idx > idx2:
+                return (idx, idx2)
+            else:
+                return (idx2, idx)
+
+    return None
 
 def print_answer(answer):
     if answer is not None:

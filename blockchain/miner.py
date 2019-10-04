@@ -46,17 +46,17 @@ def proof_of_work(last_proof):
     print("Searching for next proof")
     #block_string = json.dumps(block, sort_keys=True).encode()
 
-    proof = 0
-    guess = f"{last_proof}{proof}".encode()
-    guess_hash = hashlib.sha256(guess).hexdigest()
+    proof = sys.maxsize//3
+    #guess = f"{last_proof}{proof}".encode()
+    #guess_hash = hashlib.sha256(guess).hexdigest()
 
     # last_proof_encode = f"last_proof".encode()
     #
 
     while not valid_proof(last_hash, proof):
-        proof += 1
-        guess = f"{last_hash}{proof}".encode()
-        guess_hash = hashlib.sha256(guess).hexdigest()
+        proof -= 1
+        #guess = f"{last_hash}{proof}".encode()
+        #guess_hash = hashlib.sha256(guess).hexdigest()
 
     #  TODO: Your code here
 
