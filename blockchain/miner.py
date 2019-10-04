@@ -21,7 +21,6 @@ def valid_proof(last_hash, proof):
     guess = f"{last_hash}{proof}".encode()
     guess_hash = hashlib.sha256(guess).hexdigest()
 
-    #p = hash(proof)
 
     return str(last_hash)[-6:] == guess_hash[:6]
 
@@ -46,7 +45,8 @@ def proof_of_work(last_proof):
     print("Searching for next proof")
     #block_string = json.dumps(block, sort_keys=True).encode()
 
-    proof = sys.maxsize//3
+    proof = random.randint(-sys.maxsize, sys.maxsize//1234567890)
+    sys.stdout.write(str(proof))
     #guess = f"{last_proof}{proof}".encode()
     #guess_hash = hashlib.sha256(guess).hexdigest()
 
@@ -54,7 +54,7 @@ def proof_of_work(last_proof):
     #
 
     while not valid_proof(last_hash, proof):
-        proof -= 1
+        proof += random.randint(2**6, 2**10)
         #guess = f"{last_hash}{proof}".encode()
         #guess_hash = hashlib.sha256(guess).hexdigest()
 
