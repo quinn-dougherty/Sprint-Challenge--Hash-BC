@@ -20,7 +20,6 @@ def get_indices_of_item_weights(weights, length, limit):
 
         for j in range(i+1, length):
             weight, _ = hash_table_retrieve(ht, j)
-            #print(idx2, weights[j])
             if weight==needed_weight:
                 if i > j:
                     return (i, j)
