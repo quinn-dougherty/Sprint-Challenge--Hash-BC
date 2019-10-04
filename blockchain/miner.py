@@ -10,6 +10,22 @@ from timeit import default_timer as timer
 import random
 
 
+
+def valid_proof(last_hash, proof):
+    """
+    Validates the Proof:  Multi-ouroborus:  Do the last six characters of
+    the hash of the last proof match the first six characters of the proof?
+
+    IE:  last_hash: ...AE9123456, new hash 123456888...
+    """
+    guess = f"{last_hash}{proof}".encode()
+    guess_hash = hashlib.sha256(guess).hexdigest()
+
+
+
+    return str(last_hash)[-6:] == guess_hash[:6]
+
+
 def proof_of_work(last_proof):
     """
     Multi-Ouroboros of Work Algorithm
@@ -23,24 +39,24 @@ def proof_of_work(last_proof):
 
     start = timer()
 
+
+
     print("Searching for next proof")
+    #block_string = json.dumps(block, sort_keys=True).encode()
+
     proof = 0
+    #guess = f"{last_hash}{proof}".encode()
+    #guess_hash = hashlib.sha256(guess).hexdigest()
+
+    while not valid_proof(last_proof, proof):
+        proof += 1
+        #guess = f"{last_hash}{proof}".encode()
+        #guess_hash = hashlib.sha256(guess).hexdigest()
+
     #  TODO: Your code here
 
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
-
-
-def valid_proof(last_hash, proof):
-    """
-    Validates the Proof:  Multi-ouroborus:  Do the last six characters of
-    the hash of the last proof match the first six characters of the proof?
-
-    IE:  last_hash: ...AE9123456, new hash 123456888...
-    """
-
-    # TODO: Your code here!
-    pass
 
 
 if __name__ == '__main__':
