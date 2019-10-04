@@ -9,9 +9,6 @@ from hashtables import (HashTable,
 def get_indices_of_item_weights(weights, length, limit):
     ht = HashTable(16)
 
-    """
-    YOUR CODE HERE
-    """
     for i in range(length):
         hash_table_insert(ht, i, (weights[i], limit-weights[i]))
 
@@ -31,14 +28,20 @@ def get_indices_of_item_weights(weights, length, limit):
 def get_indices_of_item_weights_(weights, length, limit):
     ht = HashTable(16)
 
-    prev_weight = -1
-    hash_table_insert(ht, weights[0], (0, limit - weights[0]))
+    hash_table_insert(ht, weights[0], 0)
+    prev_weight = weights[0]
     for i in range(1, length):
         curr_weight = weights[i]
         curr_needed = limit - curr_weight
-        hash_table_insert(ht, curr_weight, (i, curr_needed))
+        hash_table_insert(ht, curr_weight, i)
         if prev_weight == curr_needed:
-            pass
+            idx= hash_table_retrieve(ht, prev_weight)
+            if i > idx:
+                return (i, idx)
+            else:
+                return (idx, i)
+        else:
+            prev_weight = curr_weight
 
         prev_weight = curr_weight
     pass
