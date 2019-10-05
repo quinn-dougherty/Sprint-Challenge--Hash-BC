@@ -6,7 +6,7 @@ from hashtables import (HashTable,
                         hash_table_resize)
 
 
-def get_indices_of_item_weights_(weights, length, limit):
+def get_indices_of_item_weights(weights, length, limit):
     ht = HashTable(16)
 
     for i in range(length):
@@ -25,7 +25,7 @@ def get_indices_of_item_weights_(weights, length, limit):
 
     return None
 
-def get_indices_of_item_weights(weights, length, limit):
+def get_indices_of_item_weights_(weights, length, limit):
     ht = HashTable(16)
 
     for i in range(length):

@@ -2,7 +2,7 @@ import hashlib
 import requests
 
 import sys
-
+from json.decoder import JSONDecodeError
 from uuid import uuid4
 
 from timeit import default_timer as timer
@@ -18,11 +18,10 @@ def valid_proof(last_hash, proof):
 
     IE:  last_hash: ...AE9123456, new hash 123456888...
     """
-    guess = f"{last_hash}{proof}".encode()
+    guess = f"{proof}".encode()
     guess_hash = hashlib.sha256(guess).hexdigest()
 
-
-    return str(last_hash)[-6:] == guess_hash[:6]
+    return last_hash[-6:] == guess_hash[:6]
 
 
 def proof_of_work(last_proof):
@@ -38,7 +37,6 @@ def proof_of_work(last_proof):
 
     start = timer()
 
-    #print(last_proof, type(last_proof))
     last_proof_str = f"{last_proof}".encode()
     last_hash = hashlib.sha256(last_proof_str).hexdigest()
 
@@ -46,19 +44,10 @@ def proof_of_work(last_proof):
     #block_string = json.dumps(block, sort_keys=True).encode()
 
     proof = random.randint(-sys.maxsize, sys.maxsize//1234567890)
-    sys.stdout.write(str(proof))
-    #guess = f"{last_proof}{proof}".encode()
-    #guess_hash = hashlib.sha256(guess).hexdigest()
 
-    # last_proof_encode = f"last_proof".encode()
-    #
 
     while not valid_proof(last_hash, proof):
         proof += random.randint(2**6, 2**10)
-        #guess = f"{last_hash}{proof}".encode()
-        #guess_hash = hashlib.sha256(guess).hexdigest()
-
-    #  TODO: Your code here
 
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
@@ -86,6 +75,7 @@ if __name__ == '__main__':
     while True:
         # Get the last proof from the server
         r = requests.get(url=node + "/last_proof")
+
         data = r.json()
         new_proof = proof_of_work(data.get('proof'))
 
@@ -93,12 +83,17 @@ if __name__ == '__main__':
                      "id": id}
 
         r = requests.post(url=node + "/mine", json=post_data)
-        data = r.json()
-        if data.get('message') == 'New Block Forged':
-            coins_mined += 1
-            with open("my_money.txt", "w") as wallet:
-                wallet.write(coins_mined)
-            print("Total coins mined: " + str(coins_mined))
-        else:
-            print(data.get('message'))
+        try:
+            data = r.json()
+            if data.get('message') == 'New Block Forged':
+                coins_mined += 1
+                with open("my_money.txt", "w") as wallet:
+                    wallet.write(coins_mined)
+                print("Total coins mined: " + str(coins_mined))
+            else:
+                print(data.get('message'))
+        except JSONDecodeError as e:
+            print(r)
+            print(f"json decode error: '{e}'")
+            print(data)
 # https://lambda-coin-test-1.herokuapp.com/api
